@@ -10,10 +10,12 @@ elizaSpeaks.py created by Cody Bohlman and Connor Dale
 
 November 22, 2015
 
-coreySpeaks.py created 03/06/17 by Connor Dale for improved speed and generalized use
+coreySpeaks.py created by Connor Dale for improved speed and generalized use
+
+March 6, 2017
 """
 
-import wave, struct#, sys
+import wave, struct
 from pygame import mixer
 from time import sleep
 from re import match
@@ -21,8 +23,15 @@ from time import time
 import winsound
 
 
-# smooths transitions between phonemes
 def smooth(data,phones):
+	'''
+	smooths transitions between phonemes
+	  Inputs: 
+	  	data ----------- data from .wav files for all phonemes in the word
+	  	phones --------- letters associated with phonemes
+	  Outputs:
+	  	newData -------- smoothed version of the data
+	'''
 	newData = []
 	SMOOTH_FACTOR = .9
 	newLastData = []
@@ -44,8 +53,6 @@ def smooth(data,phones):
 
 				newSecondData = data[i][int(actualLen*(1-SMOOTH_FACTOR)):]
 
-				# for j in range(len(curNewData)):
-					# newFirstData.append(curNewData[j])
 				newFirstData += curNewData
 
 				newLastData = newSecondData
@@ -122,8 +129,14 @@ def smooth(data,phones):
 		return data
 
 
-# guesses a word's pronunciation if not in the pronunciation dictionary
 def doGuess(word):
+	'''
+	Guesses a word's pronunciation if it cannot be found in the pronunciation dictionary
+	  Inputs:
+	    word ------------- the word to be pronounced
+	  Outputs:
+	    phones ----------- the word spelled phonetically
+	'''
 	basicPronunciations = {'a':['AE'],'b':['B'],'c':['K'],'d':['D'],'e':['EH'],'f':['F'],'g':['G'],'h':['HH'],'i':['IH'],
 							'j':['JH'],'k':['K'],'l':['L'],'m':['M'],'n':['N'],'o':['OW'],'p':['P'],'qu':['K','W'],'r':['R'],
 							's':['S'],'t':['T'],'u':['AH'],'v':['V'],'w':['W'],'x':['K','S'],'y':['Y'],'z':['Z'],'ch':['CH'],
@@ -157,8 +170,17 @@ def doGuess(word):
 	return phones
 
 
-# Given a list of strings representing a sentence, perform smoothing and "say" the pronounciation of the word
-def speak(words,wordMapping,soundMap):
+def speak(words,wordMapping,soundMap,fname="newFile"):
+	'''
+	creates a .wav file of the "spoken" version of a word/phrase, then plays the file
+	  Inputs:
+	    words ------------- phrase to be "spoken"
+	    wordMapping ------- dictionary of phonetic pronunciations of words
+	    soundMap ---------- dictionary of phonetic alphabet units to actual sound data
+	    fname ------------- name for the new .wav file
+	  Outputs:
+	    NONE
+	'''
 	nchannels = 1
 	sampwidth = 2
 	framerate = 0
@@ -170,7 +192,7 @@ def speak(words,wordMapping,soundMap):
 	allData = []
 	masterMapping = []
 
-	t1 = time()
+	# t1 = time()
 	for word in words.split():
 		mapping = []
 
@@ -186,40 +208,39 @@ def speak(words,wordMapping,soundMap):
 			allData.append(curData)
 			frate = curFrate
 	
-	t2 = time()
+	# t2 = time()
 	# print("data collection took "+str(t2-t1)+" seconds")
 	
 	framerate = int(frate)
 	
-	t1 = time()
+	# t1 = time()
 	allData = smooth(allData,masterMapping)
-	t2 = time()
+	# t2 = time()
 	# print("smoothing took "+str(t2-t1)+" seconds")
 	
-	t1 = time()
+	# t1 = time()
 
 	counter = sum(len(data) for data in allData)
 	numPauseFrames = int((nframes-counter) / len(words))
-
-	wavFile = wave.open('newFile.wav','w')
+	title = "save_files/"+str(fname)+".wav"
+	wavFile = wave.open(title,'w')
 	wavFile.setparams((nchannels, sampwidth, frate, nframes, comptype, compname))
 
 	pause = [0]*numPauseFrames
 	for data in allData:
 		data+=pause
-		# wavFile.writeframes(data.tostring())
 		for d in data:
 			wavFile.writeframes(struct.pack('<h',int(d)))
 
 	wavFile.close()
 
-	t2 = time()
+	# t2 = time()
 	# print("writing to file took "+str(t2-t1)+" seconds")
 
 	
 	# Play the response
 	mixer.init()
-	sound = mixer.Sound("newFile.wav")
+	sound = mixer.Sound(title)
 	sound.play()
 
 	## Try to play sound without writing to file
@@ -236,9 +257,9 @@ def speak(words,wordMapping,soundMap):
 	# t2 = time()
 	# print("playing sound took "+str(t2-t1)+" seconds")
 
-	t1 = time()
+	# t1 = time()
 	# wait for sound to play all the way through
 	sleep(nframes/44000+len(words)*.05)
-	t2 = time()
+	# t2 = time()
 	# print("slept for "+str(t2-t1)+" seconds")
 
