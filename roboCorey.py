@@ -44,18 +44,24 @@ class Interface(Frame):
 		self.fileBox.grid(row=11, column=2)
 		
 		# Submit button
-		button = Button(master, bg="White", text="Create File", width=9, height=2, relief=GROOVE,
-                    command=self.clickButton)
-		button.grid(row=14, column=2)
+		self.saveButton = Button(master, bg="White", text="Save File", width=9, height=2, relief=GROOVE,
+                    command=self.makeFile)
+		self.saveButton.grid(row=14, column=2)
 
 		# Play button
-		button = Button(master, bg="White", text="Play Sound", width=9, height=2, relief=GROOVE,
+		self.playButton = Button(master, bg="White", text="Play Sound", width=9, height=2, relief=GROOVE,
                     command=self.playSound)
-		button.grid(row=18, column=2)
+		self.playButton.grid(row=18, column=2)
+
+		# Status Label
+		self.statusMessage = StringVar()
+		self.statusMessage.set("")
+		Label(master,textvariable=self.statusMessage).grid(padx=10, pady=10, row=20, column=2)
 
 
 	# gets text box inputs and calls coreySpeaks.speak()
-	def clickButton(self):
+	def makeFile(self):
+		# self.playButton.config(state = DISABLED)
 		phrase = self.wordBox.get()
 		phrase = sub(r'[\.\,\?\;\:\!/]*',r'',phrase)
 
@@ -65,6 +71,11 @@ class Interface(Frame):
 		else:
 			speak(phrase,self.map,self.sounds)
 
+		self.statusMessage.set("")
+		# self.playButton.config(state = NORMAL)
+
+
+	# plays file with file name from text box
 	def playSound(self):
 		fname = self.fileBox.get()
 		if fname == "":
@@ -72,9 +83,12 @@ class Interface(Frame):
 		else:
 			fname = "save_files/"+fname+".wav"
 
-		mixer.init()
-		sound = mixer.Sound(fname)
-		sound.play()
+		try:
+			mixer.init()
+			sound = mixer.Sound(fname)
+			sound.play()
+		except:
+			self.statusMessage.set('File Not Found')
 
 
 # returns map of words to phonetic spellings

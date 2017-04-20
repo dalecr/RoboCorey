@@ -16,10 +16,10 @@ March 6, 2017
 """
 
 import wave, struct
-from pygame import mixer
-from time import sleep
+# from pygame import mixer
+# from time import sleep
 from re import match
-from time import time
+# from time import time
 import winsound
 
 
@@ -239,9 +239,9 @@ def speak(words,wordMapping,soundMap,fname="newFile"):
 
 	
 	# Play the response
-	mixer.init()
-	sound = mixer.Sound(title)
-	sound.play()
+	# mixer.init()
+	# sound = mixer.Sound(title)
+	# sound.play()
 
 	## Try to play sound without writing to file
 	
@@ -259,7 +259,7 @@ def speak(words,wordMapping,soundMap,fname="newFile"):
 
 	# t1 = time()
 	# wait for sound to play all the way through
-	sleep(nframes/44000+len(words)*.05)
+	# sleep(nframes/44000+len(words)*.05)
 	# t2 = time()
 	# print("slept for "+str(t2-t1)+" seconds")
 
