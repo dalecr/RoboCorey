@@ -27,6 +27,8 @@ class Interface(Frame):
 		master.title("RoboCorey")
 		self.grid()
 
+		self.lastSaved = "" # last phrase to be submitted
+
 		# Image for display
 		path = "images/robocorey.png"
 		self.robot = ImageTk.PhotoImage(Image.open(path))
@@ -36,48 +38,61 @@ class Interface(Frame):
 		# Textbox for phrase
 		Label(text='Enter a word or phrase').grid(padx=10, pady=10, row=6, column=2)
 		self.wordBox = Entry(master, width=50)
-		self.wordBox.grid(row=7, column=2)
+		self.wordBox.grid(padx=10, pady=10, row=7, column=2)
     
 		# Textbox for file name
 		Label(text='Enter a file name for saving').grid(padx=10, pady=10, row=10, column=2)
 		self.fileBox = Entry(master, width=50)
-		self.fileBox.grid(row=11, column=2)
+		self.fileBox.grid(padx=10, pady=10, row=11, column=2)
 		
 		# Submit button
-		self.saveButton = Button(master, bg="White", text="Save File", width=9, height=2, relief=GROOVE,
-                    command=self.makeFile)
-		self.saveButton.grid(row=14, column=2)
+		subButton = Button(master, bg="White", text="Say it", width=9, height=2, relief=GROOVE,
+                    command=self.playSound)
+		subButton.grid(row=14, column=2)
 
 		# Play button
-		self.playButton = Button(master, bg="White", text="Play Sound", width=9, height=2, relief=GROOVE,
-                    command=self.playSound)
-		self.playButton.grid(row=18, column=2)
+		# self.playButton = Button(master, bg="White", text="Play Sound", width=9, height=2, relief=GROOVE,
+  #                   command=self.playSound)
+		# self.playButton.grid(row=18, column=2)
 
 		# Status Label
 		self.statusMessage = StringVar()
 		self.statusMessage.set("")
-		Label(master,textvariable=self.statusMessage).grid(padx=10, pady=10, row=20, column=2)
+		Label(master,textvariable=self.statusMessage).grid(padx=10, pady=10, row=18, column=2)
 
 
 	# gets text box inputs and calls coreySpeaks.speak()
-	def makeFile(self):
-		# self.playButton.config(state = DISABLED)
-		phrase = self.wordBox.get()
-		phrase = sub(r'[\.\,\?\;\:\!/]*',r'',phrase)
+	# def makeFile(self):
+	# 	# self.playButton.config(state = DISABLED)
+	# 	phrase = self.wordBox.get()
+	# 	phrase = sub(r'[\.\,\?\;\:\!/]*',r'',phrase)
 
-		fname = self.fileBox.get()
-		if fname != "":
-			speak(phrase,self.map,self.sounds,fname)
-		else:
-			speak(phrase,self.map,self.sounds)
+	# 	fname = self.fileBox.get()
+	# 	if fname != "":
+	# 		speak(phrase,self.map,self.sounds,fname)
+	# 	else:
+	# 		speak(phrase,self.map,self.sounds)
 
-		self.statusMessage.set("")
+	# 	self.statusMessage.set("")
 		# self.playButton.config(state = NORMAL)
 
 
 	# plays file with file name from text box
 	def playSound(self):
+		phrase = self.wordBox.get()
+		phrase = sub(r'[\.\,\?\;\:\!/]*',r'',phrase)
+		phrase = phrase.lower()
+		self.statusMessage.set("")
+
 		fname = self.fileBox.get()
+		if phrase != self.lastSaved:			
+			if fname != "":
+				speak(phrase,self.map,self.sounds,fname)
+			else:
+				speak(phrase,self.map,self.sounds)
+
+			self.lastSaved = phrase
+
 		if fname == "":
 			fname = "save_files/newFile.wav"
 		else:
