@@ -16,10 +16,7 @@ March 6, 2017
 """
 
 import wave, struct
-# from pygame import mixer
-# from time import sleep
 from re import match
-# from time import time
 import winsound
 
 
@@ -165,8 +162,8 @@ def doGuess(word):
 			word = word[1:]
 			progress -= 1
 		else:
-			speak(['I','cannot','say','that','word'])
-			return []
+			# speak(['I','cant','say','that'])
+			return ['AY','K','AE','N','T','S','EY','TH','AE','T']
 	return phones
 
 
@@ -192,7 +189,6 @@ def speak(words,wordMapping,soundMap,fname="newFile"):
 	allData = []
 	masterMapping = []
 
-	# t1 = time()
 	for word in words.split():
 		mapping = []
 
@@ -208,17 +204,9 @@ def speak(words,wordMapping,soundMap,fname="newFile"):
 			allData.append(curData)
 			frate = curFrate
 	
-	# t2 = time()
-	# print("data collection took "+str(t2-t1)+" seconds")
-	
 	framerate = int(frate)
 	
-	# t1 = time()
 	allData = smooth(allData,masterMapping)
-	# t2 = time()
-	# print("smoothing took "+str(t2-t1)+" seconds")
-	
-	# t1 = time()
 
 	counter = sum(len(data) for data in allData)
 	numPauseFrames = int((nframes-counter) / len(words))
@@ -234,32 +222,4 @@ def speak(words,wordMapping,soundMap,fname="newFile"):
 
 	wavFile.close()
 
-	# t2 = time()
-	# print("writing to file took "+str(t2-t1)+" seconds")
-
-	
-	# Play the response
-	# mixer.init()
-	# sound = mixer.Sound(title)
-	# sound.play()
-
-	## Try to play sound without writing to file
-	
-	# t1 = time()
-	# for data in allData:
-	# 	# print(data)
-	# 	for i in range(len(data)):
-	# 		data[i] = struct.pack('<h',int(data[i]))
-	# winsound.PlaySound(bytearray(data),winsound.SND_MEMORY)
-	# sleep(5)
-
-
-	# t2 = time()
-	# print("playing sound took "+str(t2-t1)+" seconds")
-
-	# t1 = time()
-	# wait for sound to play all the way through
-	# sleep(nframes/44000+len(words)*.05)
-	# t2 = time()
-	# print("slept for "+str(t2-t1)+" seconds")
 
