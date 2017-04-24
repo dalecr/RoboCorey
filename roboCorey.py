@@ -10,11 +10,11 @@
 from coreySpeaks import speak
 from functools import wraps
 from re import sub
-from time import time
 import wave, struct
 from tkinter import*
 from PIL import ImageTk,Image
 from pygame import mixer
+# from time import time
 
 class Interface(Frame):
 
@@ -50,31 +50,10 @@ class Interface(Frame):
                     command=self.playSound)
 		subButton.grid(row=14, column=2)
 
-		# Play button
-		# self.playButton = Button(master, bg="White", text="Play Sound", width=9, height=2, relief=GROOVE,
-  #                   command=self.playSound)
-		# self.playButton.grid(row=18, column=2)
-
 		# Status Label
 		self.statusMessage = StringVar()
 		self.statusMessage.set("")
 		Label(master,textvariable=self.statusMessage).grid(padx=10, pady=10, row=18, column=2)
-
-
-	# gets text box inputs and calls coreySpeaks.speak()
-	# def makeFile(self):
-	# 	# self.playButton.config(state = DISABLED)
-	# 	phrase = self.wordBox.get()
-	# 	phrase = sub(r'[\.\,\?\;\:\!/]*',r'',phrase)
-
-	# 	fname = self.fileBox.get()
-	# 	if fname != "":
-	# 		speak(phrase,self.map,self.sounds,fname)
-	# 	else:
-	# 		speak(phrase,self.map,self.sounds)
-
-	# 	self.statusMessage.set("")
-		# self.playButton.config(state = NORMAL)
 
 
 	# plays file with file name from text box
@@ -141,13 +120,13 @@ def getDataFromFile(fileName):
 
 	return (values,length,framerate,compname,comptype)
 
-
-def corey(words,mapping,sounds):
-	t1 = time()
-	words = sub(r'[\.\,\?\;\:\!/]*',r'',words) # remove punctuation from input
-	coreySpeaks.speak(words,mapping,sounds)
-	t2 = time()
-	print ("corey took " + str(t2 - t1) + " seconds")
+# for testing
+# def corey(words,mapping,sounds):
+# 	t1 = time()
+# 	words = sub(r'[\.\,\?\;\:\!/]*',r'',words) # remove punctuation from input
+# 	coreySpeaks.speak(words,mapping,sounds)
+# 	t2 = time()
+# 	print ("corey took " + str(t2 - t1) + " seconds")
 
 
 def main():
